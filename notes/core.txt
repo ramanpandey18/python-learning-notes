@@ -1,0 +1,62 @@
+DAY 1
+    Block 1 — Python Internals: Memory, Decorators, Generators
+    
+        Read CPython reference counting model (quick primer, 15-20 min)
+        Write script using sys.getrefcount() to observe ref counting behavior
+        Create a deliberate circular reference, then fix using gc.collect() and weakref
+        Prepare answer: "How would you debug a memory leak in a long-running Django process?"
+        Build @retry(times=3, delay=2) decorator with arguments
+        Build @timer decorator that logs execution time
+        Build class-based @memoize decorator for caching
+        Use functools.wraps in all above — be ready to explain why it's needed
+        Write custom iterator class (__iter__, __next__)
+        Rewrite same logic as a generator function
+        Compare memory usage of both using sys.getsizeof
+        Build a lazy data pipeline: read large file → filter → transform (generator chaining)
+        Prepare answer: "How would you process a 10GB file without loading it into memory?"
+
+    Block 2 — Context Managers, Descriptors/Metaclasses
+
+        Write class-based context manager (__enter__/__exit__) — use case: DB transaction wrapper
+        Write same logic using @contextmanager decorator
+        Build a descriptor that validates an attribute (e.g., enforce positive int)
+        Read Django source: django/db/models/fields/__init__.py — see descriptors in action, connect it to your own descriptor exercise
+
+
+    Block 3 — Concurrency Deep Dive
+
+        Build same task 3 ways: threading (10 URL hits), multiprocessing (compute primes), asyncio (aiohttp for same URL task)
+        Benchmark and compare timings across all three
+        Prepare clear explanation: why GIL makes threading bad for CPU-bound, fine for I/O-bound
+        Try concurrent.futures.ThreadPoolExecutor and ProcessPoolExecutor versions of the same task
+
+
+
+DAY 2
+    Block 1 — Django ORM Optimization
+
+        Set up small Django project: Author → Book → Review related models
+        Write a query that causes N+1 problem
+        Catch it using django-debug-toolbar or nplusone
+        Fix using select_related and prefetch_related — compare generated SQL (.query or connection.queries)
+        Write a reporting-style query using annotate() and aggregate()
+        Use only()/defer() and measure query time difference
+
+    Block 2 — Transactions, Race Conditions, DRF
+
+        Simulate a race condition (e.g., two requests decrementing inventory simultaneously)
+        Reproduce the bug, then fix using select_for_update() inside atomic()
+        Build small DRF API: model + serializer (with custom validation) + viewset
+        Add custom permission class
+        Add throttling
+        Add pagination
+
+    Block 3 — Celery + System Design
+
+        Set up Celery + Redis
+        Write async task that sends an email
+        Add retry logic with exponential backoff
+        Make the task idempotent — prepare answer: "what if this task runs twice?"
+        Design a URL Shortener (DB schema, caching, ID generation) — write it out fully
+        Design a Rate Limiter (token bucket algorithm) — code + explain tradeoffs
+        Design a Notification System using Celery + message queue — explain architecture end-to-end

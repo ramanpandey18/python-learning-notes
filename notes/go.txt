@@ -1,0 +1,45 @@
+// 1. Goroutines
+go func() {
+    // concurrent work
+}()
+
+// 2. Channels
+ch := make(chan int)
+ch <- value    // send
+value := <-ch  // receive
+
+// 3. WaitGroup
+var wg sync.WaitGroup
+wg.Add(1)
+go func() {
+    defer wg.Done()
+    // work
+}()
+wg.Wait()
+
+// 4. Go has no classes — structs + methods
+type User struct {
+    Name string
+    Age  int
+}
+func (u User) Greet() string {
+    return "Hello " + u.Name
+}
+
+Gin (Go) — 4 things only:
+gor := gin.Default()
+
+// POST route
+r.POST("/shorten", func(c *gin.Context) {
+    var body struct{ URL string `json:"url"` }
+    c.ShouldBindJSON(&body)
+    c.JSON(200, gin.H{"short_url": "..."})
+})
+
+// GET route with param
+r.GET("/:code", func(c *gin.Context) {
+    code := c.Param("code")
+    c.Redirect(301, originalUrl)
+})
+
+r.Run(":3000")

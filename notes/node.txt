@@ -1,0 +1,45 @@
+// 1. Async/Await — most important
+async function fetchData() {
+    const result = await someAPICall()
+    return result
+}
+
+// 2. Promises + Promise.all (Fan-In equivalent)
+const results = await Promise.all([
+    fetch(url1),
+    fetch(url2),
+    fetch(url3)
+])
+
+// 3. Event Loop concept (just explain it verbally)
+// Single threaded, non-blocking I/O
+// Callbacks → Promises → Async/Await evolution
+
+// 4. Callbacks (legacy but asked)
+fs.readFile('file.txt', (err, data) => {
+    if (err) throw err
+    console.log(data)
+})
+
+
+Express (Node.js) — 4 things only:
+const express = require('express')
+const app = express()
+
+// 1. Parse JSON body
+app.use(express.json())
+
+// 2. POST route
+app.post('/shorten', async (req, res) => {
+    const { url } = req.body
+    res.json({ short_url: '...' })
+})
+
+// 3. GET route with param
+app.get('/:code', async (req, res) => {
+    const { code } = req.params
+    res.redirect(301, originalUrl)
+})
+
+// 4. Start server
+app.listen(3000)
