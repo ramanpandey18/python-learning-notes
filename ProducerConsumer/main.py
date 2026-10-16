@@ -1,42 +1,66 @@
+
 import threading
 import queue
 import time
 
-def producer(q):
-    jobs = ["job1", "job2", "job3", "job4", "job5", "job6"]
-    for job in jobs:
-        print(f"[Producer] Queuing: {job}")
-        q.put(job)
-        time.sleep(0.2)        # produce one job every 0.2s
+job_queue = queue.Queue()
+STOP = None
 
-    q.put(None)                # poison pill — signals stop
-    print("[Producer] Done — sent poison pill")
 
-def consumer(q, worker_id):
+# The work each job performs
+def process_job(job_id):
+    time.sleep(1)
+
+    if job_id == 4:
+        raise ValueError("Job 4 failed!")
+
+    return f"Job {job_id} completed"
+
+
+# Each worker continuously consumes jobs
+def worker():
     while True:
-        item = q.get()         # blocks until item available
-        if item is None:
-            q.put(None)        # pass pill to next worker
-            print(f"[Worker {worker_id}] Stopping")
-            break
-        print(f"[Worker {worker_id}] Processing: {item}")
-        time.sleep(0.5)        # each job takes 0.5s to process
-        print(f"[Worker {worker_id}] Done: {item}")
+        job_id = job_queue.get()
 
-q = queue.Queue()
+        try:
+            if job_id is STOP:
+                return
 
-producer_thread = threading.Thread(target=producer, args=(q,))
-workers = [
-    threading.Thread(target=consumer, args=(q, i))
-    for i in range(3)
-]
+            try:
+                result = process_job(job_id)
+                print("SUCCESS:", result)
 
-producer_thread.start()
-for w in workers:
-    w.start()
+            except Exception as error:
+                print(f"FAILED: Job {job_id}: {error}")
 
-producer_thread.join()
-for w in workers:
-    w.join()
+        finally:
+            job_queue.task_done()
 
-print("\nAll jobs processed!")
+
+# Create exactly 3 workers
+workers = []
+
+for _ in range(3):
+    thread = threading.Thread(target=worker)
+    thread.start()
+    workers.append(thread)
+
+
+# Submit 10 jobs
+for job_id in range(1, 11):
+    job_queue.put(job_id)
+
+
+# Wait until all jobs are processed
+job_queue.join()
+
+
+# Tell workers to stop
+for _ in workers:
+    job_queue.put(STOP)
+
+# Wait for every worker to exit
+for thread in workers:
+    thread.join()
+
+print("All jobs finished. Processor stopped.")
