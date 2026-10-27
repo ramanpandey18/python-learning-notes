@@ -43,3 +43,5 @@ def merge_two_files(file1_path, file2_path, output_path):
 
 
 merge_two_files("file1.txt", "file2.txt", "merged.txt")
+# BASE = Path(__file__).resolve().parent
+# merge_two_files(BASE / "file1.txt", BASE / "file2.txt", BASE / "merged.txt")
