@@ -21,6 +21,10 @@ class PayPalPayment(PaymentMethod):
     def pay(self, amount):
         print(f"Paying {amount} using PayPal")
 
+class GooglePayPayment(PaymentMethod):
+    def pay(self, amount):
+        print(f"Paying {amount} using Google Pay")
+
 
 class PaymentService:
     def __init__(self, payment_method: PaymentMethod):
@@ -28,3 +32,7 @@ class PaymentService:
 
     def checkout(self, amount):
         self.payment_method.pay(amount)
+
+payment = GooglePayPayment()
+service = PaymentService(payment)
+service.checkout(1000)

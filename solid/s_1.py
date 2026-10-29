@@ -1,4 +1,3 @@
-
 class CheckoutService:
     def __init__(self, calculator, repository, notifier):
         self.calculator = calculator

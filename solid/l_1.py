@@ -27,10 +27,7 @@ class CashPayment(PaymentMethod):
         print(f"Accepting {amount} in cash")
 
 
-def process_refund(
-    payment: RefundablePaymentMethod,
-    amount: float,
-) -> None:
+def process_refund(payment: RefundablePaymentMethod,amount: float,) -> None:
     payment.refund(amount)
 
 

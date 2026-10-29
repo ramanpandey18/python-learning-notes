@@ -4,3 +4,9 @@ def square_generator(n):
 
 for sq in square_generator(5):
     print(sq)
+
+def square_generator_1(n):
+    yield n * n
+
+for sq in square_generator_1(5):
+    print(sq)
